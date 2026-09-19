@@ -34,55 +34,79 @@ Materio replaces conventional trial-and-error physical prototyping with an inver
   </tr>
 </table>
 
-```mermaid
-graph LR
-    subgraph Inputs["Target Physical Requirements"]
-        A[Target Modulus]
-        B[Target Tensile Strength]
-        C[Max Composite Density]
-    end
+<br/>
 
-    subgraph Engine["Materio Inverse Engine"]
-        D[Surrogate Model Lookup]
-    end
-
-    subgraph Outputs["Computed Recipe Parameters"]
-        E[Fiber Type & Polymer Matrix]
-        F[Volume Fraction & Fiber Angle]
-        G[Alkali Soak Duration & Fiber Length]
-    end
-
-    Inputs --> Engine --> Outputs
-```
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="30%" align="center">1. Target Physical Inputs</th>
+      <th width="10%" align="center">➔</th>
+      <th width="30%" align="center">2. Materio Inverse Engine</th>
+      <th width="10%" align="center">➔</th>
+      <th width="30%" align="center">3. Computed Recipe Outputs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>• Target Modulus<br/>• Target Tensile Strength<br/>• Max Composite Density</td>
+      <td align="center">➔</td>
+      <td align="center"><b>Surrogate Model Lookup & Domain Optimization</b></td>
+      <td align="center">➔</td>
+      <td>• Fiber Type & Polymer Matrix<br/>• Volume Fraction & Fiber Angle<br/>• Alkali Soak Duration & Fiber Length</td>
+    </tr>
+  </tbody>
+</table>
 
 ---
 
 ## System Architecture
 
-```mermaid
-graph TD
-    A[Target Mechanical Inputs: Modulus, Strength, Density] --> B[Preprocessing & Feature Normalization]
-    B --> C[Surrogate ML Inverse Engine]
-    
-    C --> D{Material Domain Classification}
-    
-    D -->|Bio-Composite Path| E[Jute Optimization Model]
-    D -->|Advanced Synthetic Path| F[Glass / Carbon Optimization Model]
-    
-    E --> G[Constituent & Process Recipe Output]
-    F --> G
-    
-    G --> H[Manufacturing Workflow & Recipe Generation]
-```
+<table width="100%">
+  <tr>
+    <td align="center"><b>Input: Target Mechanical Inputs</b> (Modulus, Strength, Density)</td>
+  </tr>
+  <tr><td align="center">↓</td></tr>
+  <tr>
+    <td align="center"><b>Preprocessing & Feature Normalization</b></td>
+  </tr>
+  <tr><td align="center">↓</td></tr>
+  <tr>
+    <td align="center"><b>Surrogate ML Inverse Engine</b></td>
+  </tr>
+  <tr><td align="center">↓</td></tr>
+  <tr>
+    <td align="center"><b>Material Domain Classification</b></td>
+  </tr>
+  <tr>
+    <td>
+      <table width="100%">
+        <tr>
+          <td width="50%" align="center"><b>Bio-Composite Path</b><br/>➔ Jute Optimization Model</td>
+          <td width="50%" align="center"><b>Advanced Synthetic Path</b><br/>➔ Glass / Carbon Optimization Model</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr><td align="center">↓</td></tr>
+  <tr>
+    <td align="center"><b>Constituent & Process Recipe Output</b></td>
+  </tr>
+  <tr><td align="center">↓</td></tr>
+  <tr>
+    <td align="center"><b>Manufacturing Workflow & Recipe Generation</b></td>
+  </tr>
+</table>
+
+<br/>
 
 <details>
 <summary><b>Click to expand System Core Workflow Breakdown</b></summary>
 
 <br/>
 
-1. **Target Specification:** User inputs structural constraints ($E_c$, $\sigma_c$, $\rho_c$).
+1. **Target Specification:** User inputs structural constraints (E_c, σ_c, ρ_c).
 2. **Surrogate Search Space:** The model queries high-dimensional surrogate response surfaces generated via modified Cox-Krenchel and Halpin-Tsai micromechanics.
-3. **Parametric Resolution:** Outputs the required fiber volume fraction ($V_f$), orientation angle ($\theta$), fiber length ($L_f$), matrix polymer class, and chemical treatment duration ($t_{alkali}$).
+3. **Parametric Resolution:** Outputs the required fiber volume fraction (V_f), orientation angle (θ), fiber length (L_f), matrix polymer class, and chemical treatment duration (t_alkali).
 4. **Recipe Synthesis:** Generates automated step-by-step pre-treatment instructions.
 
 </details>
@@ -93,7 +117,7 @@ graph TD
 
 Materio is powered by a high-density, two-tier synthetic dataset containing 200,000 samples generated using physical micromechanics formulations and Gaussian noise injection.
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>Subset Identifier</th>
@@ -121,12 +145,14 @@ Materio is powered by a high-density, two-tier synthetic dataset containing 200,
   </tbody>
 </table>
 
+<br/>
+
 <details>
 <summary><b>Click to view Data Features & Schema</b></summary>
 
 <br/>
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>Feature Column</th>
@@ -158,16 +184,18 @@ Materio is powered by a high-density, two-tier synthetic dataset containing 200,
 The synthetic generation engine incorporates physical orientation and length efficiency factors to calibrate prediction boundaries.
 
 ### Elastic Modulus Prediction
-$$E_c = \eta_o \eta_l E_f V_f + E_m (1 - V_f)$$
+
+> **E_c = η_o * η_l * E_f * V_f + E_m * (1 - V_f)**
 
 Where:
-* $\eta_o = \cos^4(\theta) + K_{transverse}$ represents the Krenchel orientation factor.
-* $E_f$ and $E_m$ denote fiber and matrix elastic moduli, respectively.
-* $V_f$ is the fiber volume fraction.
+* **η_o = cos⁴(θ) + K_transverse** represents the Krenchel orientation factor.
+* **E_f** and **E_m** denote fiber and matrix elastic moduli, respectively.
+* **V_f** is the fiber volume fraction.
 
 ### Chemical Surface Modification Factor
 For natural plant fibers, interfacial bond strength is modeled as a non-linear function of alkali soaking time:
-$$f(t_{alkali}) = 1.0 + 0.08 t_{alkali} - 0.008 t_{alkali}^2$$
+
+> **f(t_alkali) = 1.0 + 0.08 * t_alkali - 0.008 * (t_alkali)²**
 
 ---
 
@@ -215,7 +243,7 @@ print(design_recipe)
 
 <br/>
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>Polymer Class</th>
@@ -234,12 +262,14 @@ print(design_recipe)
 
 </details>
 
+<br/>
+
 <details>
 <summary><b>View Supported Reinforcement Fiber Types</b></summary>
 
 <br/>
 
-<table>
+<table width="100%">
   <thead>
     <tr>
       <th>Fiber Type</th>
@@ -256,27 +286,6 @@ print(design_recipe)
 </table>
 
 </details>
-
----
-
-## Repository Structure
-
-```mermaid
-graph TD
-    Root[materio/] --> Data[data/]
-    Root --> Src[src/]
-    Root --> Notebooks[notebooks/]
-
-    Data --> JuteCSV[jute_composite_dataset_80k.csv]
-    Data --> AdvCSV[advanced_composite_dataset_120k.csv]
-    Data --> CombCSV[materio_dataset_200k.csv]
-
-    Src --> GenData[generate_datasets.py]
-    Src --> Models[inverse_solver.py]
-
-    Notebooks --> EDA[01_eda.ipynb]
-    Notebooks --> Train[02_train.ipynb]
-```
 
 ---
 
