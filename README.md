@@ -1,161 +1,4 @@
-import os
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
-# ==============================================================================
-# 1. JUTE COMPOSITE DATASET GENERATOR (80,000 SAMPLES WITH GAUSSIAN NOISE)
-# ==============================================================================
-def generate_jute_dataset(n_samples=80000):
-    np.random.seed(42)
-    v_f = np.random.uniform(0.10, 0.50, n_samples)
-    fiber_length = np.random.uniform(1.0, 10.0, n_samples)
-    alkali_duration = np.random.uniform(0.0, 8.0, n_samples)
-    fiber_angle = np.random.uniform(0, 90, n_samples)
-    
-    polymers = np.random.choice(['PP Polymer', 'PLA'], size=n_samples, p=[0.65, 0.35])
-    matrix_modulus = np.where(polymers == 'PP Polymer', 1.50, 2.00)
-    matrix_density = np.where(polymers == 'PP Polymer', 0.91, 1.24)
-    
-    e_fiber = 25.0
-    jute_density = 1.45
-    
-    treatment_factor = 1.0 + 0.08 * alkali_duration - 0.008 * (alkali_duration ** 2)
-    rad_angle = np.radians(fiber_angle)
-    eta_o = np.cos(rad_angle) ** 4 + 0.12
-    
-    modulus_noise = np.random.normal(loc=0.0, scale=0.35, size=n_samples)
-    modulus = (eta_o * e_fiber * v_f) + (matrix_modulus * (1 - v_f)) + modulus_noise
-    modulus = np.clip(modulus, 1.0, 25.0)
-    
-    base_strength = 320.0 * treatment_factor
-    strength_noise = np.random.normal(loc=0.0, scale=5.0, size=n_samples)
-    strength = (eta_o * base_strength * v_f) + (35.0 * (1 - v_f)) + strength_noise
-    strength = np.clip(strength, 15.0, 220.0)
-    
-    density_noise = np.random.normal(loc=0.0, scale=0.02, size=n_samples)
-    density = (v_f * jute_density) + ((1 - v_f) * matrix_density) + density_noise
-    density = np.clip(density, 0.8, 2.0)
-    
-    return pd.DataFrame({
-        'Fiber_Type': 'Jute Fiber',
-        'Polymer_Class': polymers,
-        'Fiber_Volume_Fraction': np.round(v_f, 4),
-        'Fiber_Length_mm': np.round(fiber_length, 2),
-        'Alkali_Treatment_Hours': np.round(alkali_duration, 1),
-        'Fiber_Angle_deg': np.round(fiber_angle, 1),
-        'Matrix_Modulus_GPa': np.round(matrix_modulus, 2),
-        'Target_Modulus_GPa': np.round(modulus, 2),
-        'Target_Strength_MPa': np.round(strength, 2),
-        'Composite_Density_gcc': np.round(density, 2)
-    })
-
-# ==============================================================================
-# 2. ADVANCED COMPOSITE DATASET GENERATOR (120,000 SAMPLES WITH GAUSSIAN NOISE)
-# ==============================================================================
-def generate_advanced_dataset(n_samples=120000):
-    np.random.seed(101)
-    fiber_types = np.random.choice(['Glass', 'Carbon'], size=n_samples, p=[0.75, 0.25])
-    v_f = np.random.uniform(0.15, 0.75, n_samples)
-    fiber_length = np.random.uniform(2.0, 15.0, n_samples)
-    fiber_angle = np.random.uniform(0, 90, n_samples)
-    
-    polymers = np.random.choice(['PEEK (Medical)', 'Epoxy', 'PLA'], size=n_samples, p=[0.45, 0.35, 0.20])
-    
-    matrix_mod_map = {'PEEK (Medical)': 3.80, 'Epoxy': 3.20, 'PLA': 2.00}
-    matrix_den_map = {'PEEK (Medical)': 1.30, 'Epoxy': 1.15, 'PLA': 1.24}
-    
-    matrix_modulus = np.vectorize(matrix_mod_map.get)(polymers)
-    matrix_density = np.vectorize(matrix_den_map.get)(polymers)
-    
-    fiber_modulus = np.where(fiber_types == 'Glass', 72.0, 230.0)
-    fiber_strength = np.where(fiber_types == 'Glass', 2200.0, 4000.0)
-    fiber_density = np.where(fiber_types == 'Glass', 2.54, 1.78)
-    
-    rad_angle = np.radians(fiber_angle)
-    eta_o = np.cos(rad_angle) ** 4 + 0.05
-    
-    modulus_noise = np.random.normal(loc=0.0, scale=0.75, size=n_samples)
-    modulus = (eta_o * fiber_modulus * v_f) + (matrix_modulus * (1 - v_f)) + modulus_noise
-    modulus = np.clip(modulus, 1.5, 180.0)
-    
-    strength_noise = np.random.normal(loc=0.0, scale=12.0, size=n_samples)
-    strength = (eta_o * fiber_strength * v_f * 0.12) + (45.0 * (1 - v_f)) + strength_noise
-    strength = np.clip(strength, 20.0, 700.0)
-    
-    density_noise = np.random.normal(loc=0.0, scale=0.03, size=n_samples)
-    density = (v_f * fiber_density) + ((1 - v_f) * matrix_density) + density_noise
-    density = np.clip(density, 1.0, 3.0)
-    
-    return pd.DataFrame({
-        'Fiber_Type': fiber_types,
-        'Polymer_Class': polymers,
-        'Fiber_Volume_Fraction': np.round(v_f, 4),
-        'Fiber_Length_mm': np.round(fiber_length, 2),
-        'Alkali_Treatment_Hours': 0.0,
-        'Fiber_Angle_deg': np.round(fiber_angle, 1),
-        'Matrix_Modulus_GPa': np.round(matrix_modulus, 2),
-        'Target_Modulus_GPa': np.round(modulus, 2),
-        'Target_Strength_MPa': np.round(strength, 2),
-        'Composite_Density_gcc': np.round(density, 2)
-    })
-
-# ==============================================================================
-# 3. VISUALIZATION GENERATOR
-# ==============================================================================
-def generate_visuals(df, filename='materio_dataset_visualization.png'):
-    sns.set_theme(style="whitegrid")
-    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-    
-    sns.scatterplot(
-        data=df.sample(5000, random_state=42),
-        x='Target_Modulus_GPa',
-        y='Target_Strength_MPa',
-        hue='Fiber_Type',
-        alpha=0.6,
-        ax=axes[0, 0]
-    )
-    axes[0, 0].set_title('Target Modulus vs Tensile Strength')
-    
-    sns.kdeplot(
-        data=df,
-        x='Composite_Density_gcc',
-        hue='Fiber_Type',
-        fill=True,
-        common_norm=False,
-        ax=axes[0, 1]
-    )
-    axes[0, 1].set_title('Density Distribution by Fiber Type')
-    
-    sns.boxplot(
-        data=df,
-        x='Polymer_Class',
-        y='Target_Modulus_GPa',
-        hue='Fiber_Type',
-        ax=axes[1, 0]
-    )
-    axes[1, 0].set_title('Target Modulus across Polymer Classes')
-    
-    sns.scatterplot(
-        data=df[df['Fiber_Type'] == 'Jute Fiber'].sample(2000, random_state=42),
-        x='Alkali_Treatment_Hours',
-        y='Target_Strength_MPa',
-        hue='Fiber_Volume_Fraction',
-        palette='viridis',
-        ax=axes[1, 1]
-    )
-    axes[1, 1].set_title('Alkali Soaking Duration vs Strength (Jute)')
-    
-    plt.tight_layout()
-    plt.savefig(filename, dpi=300)
-    plt.close()
-
-# ==============================================================================
-# 4. README GENERATOR (AUTOMATED FILE CREATION WITHOUT EMOJIS OR UNICODE ART)
-# ==============================================================================
-def create_readme_file():
-    readme_content = """<div align="center">
+<div align="center">
 
 # MATERIO
 
@@ -202,3 +45,101 @@ graph LR
     end
 
     Inputs --> Engine --> Outputs
+
+
+System Architecture:
+
+graph TD
+    A[Target Mechanical Inputs: Modulus, Strength, Density] --> B[Preprocessing & Feature Normalization]
+    B --> C[Surrogate ML Inverse Engine]
+    
+    C --> D{Material Domain Classification}
+    
+    D -->|Bio-Composite Path| E[Jute Optimization Model]
+    D -->|Advanced Synthetic Path| F[Glass / Carbon Optimization Model]
+    
+    E --> G[Constituent & Process Recipe Output]
+    F --> G
+    
+    G --> H[Manufacturing Workflow & Recipe Generation]
+
+<details>
+<summary><b>Click to expand System Core Workflow Breakdown</b></summary>
+Target Specification: User inputs structural constraints (E_c, \sigma_c, \rho_c).
+Surrogate Search Space: The model queries high-dimensional surrogate response surfaces generated via modified Cox-Krenchel and Halpin-Tsai micromechanics.
+Parametric Resolution: Outputs the required fiber volume fraction (V_f), orientation angle (\theta), fiber length (L_f), matrix polymer class, and chemical treatment duration (t_{alkali}).
+Recipe Synthesis: Generates automated step-by-step pre-treatment instructions.
+</details>
+Dataset Specifications
+Materio is powered by a high-density, two-tier synthetic dataset containing 200,000 samples generated using physical micromechanics formulations and Gaussian noise injection.
+
+Subset IdentifierSample CountPrimary FiberMatrix SelectionKey Features & Constraints
+Bio-Composite80,000Jute FiberPP, PLAV_f: 10–50%, Alkali Duration: 0–8 hrs, Fiber Length: 1–10 mm
+Advanced Composite120,000Glass, CarbonPEEK, Epoxy, PLAV_f: 15–75%, Fiber Angle: 0\text{--}90^\circ, Fiber Length: 2–15 mm
+
+<details>
+<summary><b>Click to view Data Features & Schema</b></summary>
+Feature ColumnData TypeValue Range / CategoriesDescription
+Fiber_TypeCategoricalJute Fiber, Glass, CarbonReinforcement material type
+Polymer_ClassCategoricalPP Polymer, PLA, PEEK (Medical), EpoxyMatrix polymer base
+Fiber_Volume_FractionFloat0.1000 - 0.7500Volume ratio of fiber to total composite
+Fiber_Length_mmFloat1.00 - 15.00Chopped fiber length in millimeters
+Alkali_Treatment_HoursFloat0.0 - 8.0Chemical wash soak duration (NaOH)
+Fiber_Angle_degFloat0.0 - 90.0Fiber alignment relative to load axis
+Matrix_Modulus_GPaFloat1.50 - 3.80Elastic modulus of unreinforced polymer
+Target_Modulus_GPaFloatContinuous TargetDesired composite elastic modulus
+Target_Strength_MPaFloatContinuous TargetDesired composite tensile strength
+Composite_Density_gccFloatContinuous TargetFinal composite mass density
+
+</details>
+Theoretical Micromechanics Base
+The synthetic generation engine incorporates physical orientation and length efficiency factors to calibrate prediction boundaries.
+Elastic Modulus Prediction
+E_c = \eta_o \eta_l E_f V_f + E_m (1 - V_f)
+
+Where:
+\eta_o = \cos^4(\theta) + K_{transverse} represents the Krenchel orientation factor.
+E_f and E_m denote fiber and matrix elastic moduli, respectively.
+V_f is the fiber volume fraction.
+Chemical Surface Modification Factor
+For natural plant fibers, interfacial bond strength is modeled as a non-linear function of alkali soaking time:
+
+
+
+Interactive Feature Matrix
+<details>
+<summary><b>View Supported Polymer Matrix Properties</b></summary>
+Polymer ClassModulus (GPa)Density (g/cc)Typical Application
+Polypropylene (PP)1.500.91Lightweight Bio-Composites
+Polylactic Acid (PLA)2.001.24Biodegradable Structures
+Epoxy System3.201.15Structural Aerospace/Automotive
+PEEK (Medical Grade)3.801.30High-Performance Medical Implants
+
+</details>
+<details>
+<summary><b>View Supported Reinforcement Fiber Types</b></summary>
+
+Fiber TypeModulus (GPa)Tensile Strength (MPa)Density (g/cc)
+Jute Fiber25.0320–4501.45
+E-Glass Fiber72.022002.54
+Carbon Fiber230.040001.78
+</details>
+Project Repository Layout
+graph TD
+    Root[materio/] --> Data[data/]
+    Root --> Src[src/]
+    Root --> Notebooks[notebooks/]
+
+    Data --> JuteCSV[jute_composite_dataset_80k.csv]
+    Data --> AdvCSV[advanced_composite_dataset_120k.csv]
+    Data --> CombCSV[materio_dataset_200k.csv]
+
+    Src --> GenData[generate_datasets.py]
+    Src --> Models[inverse_solver.py]
+
+    Notebooks --> EDA[01_eda.ipynb]
+    Notebooks --> Train[02_train.ipynb]
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
