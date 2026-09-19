@@ -61,7 +61,7 @@ Materio replaces conventional trial-and-error physical prototyping with an inver
 
 ---
 
-## 📱 Download App & Screenshots
+## Download App & Screenshots
 
 Directly download and install the **Materio Android Application (APK)** to calculate composite material recipes on the go.
 
@@ -69,27 +69,24 @@ Directly download and install the **Materio Android Application (APK)** to calcu
 
 <div align="center">
 
-### 📥 [DOWNLOAD APK](https://apkpure.com/materio/com.abdulmalek.nty)
-
 [![DOWNLOAD APK](https://img.shields.io/badge/📥_DOWNLOAD-APK_NOW-008050?style=for-the-badge&logo=android&logoColor=white)](https://apkpure.com/materio/com.abdulmalek.nty)
 
 👉 **[Click Here To Download Materio APK](https://apkpure.com/materio/com.abdulmalek.nty)** 👈
 
-<br/>
+<br/><br/>
 
-### 📸 Application Interface Screenshots
-
-| Main Screen | Recipe Inputs |
-| :---: | :---: |
-| <img src="https://drive.google.com/thumbnail?id=1RMG8wrCch8u1VwA4nzIMl4RU3921x-B7&sz=w800" width="260"/> | <img src="https://drive.google.com/thumbnail?id=1u_EzmHTJtB9i8o9pAIxAWm25ZDMvRg5G&sz=w800" width="260"/> |
-
-| Parameter Selection | Output Results |
-| :---: | :---: |
-| <img src="https://drive.google.com/thumbnail?id=1Fhz_IeHLHc2RooA70Lz9zA_0GD63twUN&sz=w800" width="260"/> | <img src="https://drive.google.com/thumbnail?id=1zv2zcJQ-ksvcGdDUBNv5UMhvtVCkl4bB&sz=w800" width="260"/> |
-
-| Material Matrix | Chemical Treatment |
-| :---: | :---: |
-| <img src="https://drive.google.com/thumbnail?id=1EMkLWcxvkGSsSqcb_FLUeZ4MIZ0nSE-V&sz=w800" width="260"/> | <img src="https://drive.google.com/thumbnail?id=1j6cr2DGAZD399rRC6uLIQQzWHSF4blTW&sz=w800" width="260"/> |
+<table width="100%">
+  <tr>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1RMG8wrCch8u1VwA4nzIMl4RU3921x-B7&sz=w800" width="100%"/></td>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1u_EzmHTJtB9i8o9pAIxAWm25ZDMvRg5G&sz=w800" width="100%"/></td>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1Fhz_IeHLHc2RooA70Lz9zA_0GD63twUN&sz=w800" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1zv2zcJQ-ksvcGdDUBNv5UMhvtVCkl4bB&sz=w800" width="100%"/></td>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1EMkLWcxvkGSsSqcb_FLUeZ4MIZ0nSE-V&sz=w800" width="100%"/></td>
+    <td align="center" width="33%"><img src="https://drive.google.com/thumbnail?id=1j6cr2DGAZD399rRC6uLIQQzWHSF4blTW&sz=w800" width="100%"/></td>
+  </tr>
+</table>
 
 </div>
 
