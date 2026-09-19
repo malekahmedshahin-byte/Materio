@@ -1,15 +1,17 @@
 <div align="center">
 
+<img src="https://lh3.googleusercontent.com/d/1k9R-ev4AdtHP-sPLX_5h1TIaQg35ZtSX" width="120" style="border-radius: 24px;" alt="Materio App Icon"/>
+
 # MATERIO
 
 ### AI-Driven Inverse Design Engine for Advanced Composite Materials
 
-A computational framework for mapping target mechanical performance to optimal constituent formulations, fiber geometry, and manufacturing pre-treatments.
+A mobile computational framework for mapping target mechanical performance to optimal constituent formulations, fiber geometry, and manufacturing pre-treatments.
 
 <br/>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10%2B-0052CC.svg?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+" />
+  <img src="https://img.shields.io/badge/Platform-Android%20APK-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Android APK" />
   <img src="https://img.shields.io/badge/ML-PyTorch%20%7C%20XGBoost-FF6F00.svg?style=for-the-badge" alt="Machine Learning" />
   <img src="https://img.shields.io/badge/Dataset-200K%20Samples-008050.svg?style=for-the-badge" alt="Dataset" />
   <img src="https://img.shields.io/badge/Architecture-Inverse%20Surrogate-6F42C1.svg?style=for-the-badge" alt="Architecture" />
@@ -59,6 +61,41 @@ Materio replaces conventional trial-and-error physical prototyping with an inver
 
 ---
 
+## Download App & Screenshots
+
+Directly download and install the Materio Android Application (APK) on your device to calculate composite material recipes on the go.
+
+<br/>
+
+<div align="center">
+
+### 📱 Application Screenshots
+
+<table width="100%">
+  <tr>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1RMG8wrCch8u1VwA4nzIMl4RU3921x-B7" width="100%" alt="Materio Screen 1"/></td>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1u_EzmHTJtB9i8o9pAIxAWm25ZDMvRg5G" width="100%" alt="Materio Screen 2"/></td>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1Fhz_IeHLHc2RooA70Lz9zA_0GD63twUN" width="100%" alt="Materio Screen 3"/></td>
+  </tr>
+  <tr>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1zv2zcJQ-ksvcGdDUBNv5UMhvtVCkl4bB" width="100%" alt="Materio Screen 4"/></td>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1EMkLWcxvkGSsSqcb_FLUeZ4MIZ0nSE-V" width="100%" alt="Materio Screen 5"/></td>
+    <td align="center" width="33%"><img src="https://lh3.googleusercontent.com/d/1j6cr2DGAZD399rRC6uLIQQzWHSF4blTW" width="100%" alt="Materio Screen 6"/></td>
+  </tr>
+</table>
+
+<br/>
+
+### 📥 Direct APK Download
+
+[<img src="https://img.shields.io/badge/Download-Materio%20APK-008050?style=for-the-badge&logo=android&logoColor=white" height="45" />](https://apkpure.com/materio/com.abdulmalek.nty)
+
+<sub>Direct APK Download Link: [https://apkpure.com/materio/com.abdulmalek.nty](https://apkpure.com/materio/com.abdulmalek.nty)</sub>
+
+</div>
+
+---
+
 ## System Architecture
 
 <table width="100%">
@@ -104,9 +141,9 @@ Materio replaces conventional trial-and-error physical prototyping with an inver
 
 <br/>
 
-1. **Target Specification:** User inputs structural constraints (E_c, σ_c, ρ_c).
+1. **Target Specification:** User inputs structural constraints (E<sub>c</sub>, σ<sub>c</sub>, ρ<sub>c</sub>).
 2. **Surrogate Search Space:** The model queries high-dimensional surrogate response surfaces generated via modified Cox-Krenchel and Halpin-Tsai micromechanics.
-3. **Parametric Resolution:** Outputs the required fiber volume fraction (V_f), orientation angle (θ), fiber length (L_f), matrix polymer class, and chemical treatment duration (t_alkali).
+3. **Parametric Resolution:** Outputs the required fiber volume fraction (V<sub>f</sub>), orientation angle (θ), fiber length (L<sub>f</sub>), matrix polymer class, and chemical treatment duration (t<sub>alkali</sub>).
 4. **Recipe Synthesis:** Generates automated step-by-step pre-treatment instructions.
 
 </details>
@@ -185,54 +222,17 @@ The synthetic generation engine incorporates physical orientation and length eff
 
 ### Elastic Modulus Prediction
 
-> **E_c = η_o * η_l * E_f * V_f + E_m * (1 - V_f)**
+> **E<sub>c</sub> = η<sub>o</sub> × η<sub>l</sub> × E<sub>f</sub> × V<sub>f</sub> + E<sub>m</sub> × (1 - V<sub>f</sub>)**
 
 Where:
-* **η_o = cos⁴(θ) + K_transverse** represents the Krenchel orientation factor.
-* **E_f** and **E_m** denote fiber and matrix elastic moduli, respectively.
-* **V_f** is the fiber volume fraction.
+* **η<sub>o</sub> = cos⁴(θ) + K<sub>transverse</sub>** represents the Krenchel orientation factor.
+* **E<sub>f</sub>** and **E<sub>m</sub>** denote fiber and matrix elastic moduli, respectively.
+* **V<sub>f</sub>** is the fiber volume fraction.
 
 ### Chemical Surface Modification Factor
 For natural plant fibers, interfacial bond strength is modeled as a non-linear function of alkali soaking time:
 
-> **f(t_alkali) = 1.0 + 0.08 * t_alkali - 0.008 * (t_alkali)²**
-
----
-
-## Quick Start
-
-### Installation
-
-```bash
-git clone [https://github.com/your-username/materio.git](https://github.com/your-username/materio.git)
-cd materio
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-### Dataset Generation
-
-```bash
-python src/generate_datasets.py
-```
-
-### Model Inference
-
-```python
-from materio.engine import InverseDesignEngine
-
-engine = InverseDesignEngine(model_path="weights/surrogate_xgboost.pkl")
-
-targets = {
-    "target_modulus_gpa": 10.94,
-    "target_strength_mpa": 187.63,
-    "max_density_gcc": 1.20
-}
-
-design_recipe = engine.predict(targets)
-print(design_recipe)
-```
+> **f(t<sub>alkali</sub>) = 1.0 + 0.08 × t<sub>alkali</sub> - 0.008 × (t<sub>alkali</sub>)²**
 
 ---
 
